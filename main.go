@@ -25,7 +25,7 @@ func main() {
 	urlPrefixBytes = []byte(*urlPrefix)
 
 	storage = NewStorageFiles(*storeFolder)
-	hashFunc = hashSha256_48Bit
+	hashFunc = dchestSipHash_48bitFast
 	makeUrl = encodeUrlBase64
 
 	fasthttp.ListenAndServe(*bindAddress, handleRequest)

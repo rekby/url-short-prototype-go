@@ -4,9 +4,13 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"os"
+	"runtime"
 	"strconv"
+	"sync"
 	"testing"
 )
+
+const benchmarkParalellism = 4
 
 func createBenchData(count int) (items, values [][]byte) {
 	keys := make([][]byte, count)
@@ -22,18 +26,36 @@ func createBenchData(count int) (items, values [][]byte) {
 }
 
 func BenchmarkStorageFiles_Store(b *testing.B) {
-	keys, vals := createBenchData(b.N)
 	tmpDir, err := ioutil.TempDir("", "benchmark-files")
 	if err != nil {
 		b.Fatal(err)
 	}
 	defer os.RemoveAll(tmpDir)
-	s := NewStorageFiles(tmpDir)
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		s.Store(keys[i], vals[i])
+	var goroutinesCount = benchmarkParalellism * runtime.GOMAXPROCS(-1)
+	connections := make([]StorageFiles, goroutinesCount)
+	keys := make([][][]byte, goroutinesCount)
+	vals := make([][][]byte, goroutinesCount)
+	var localMutex sync.Mutex
+
+	for i := 0; i < goroutinesCount; i++ {
+		connections[i] = NewStorageFiles(tmpDir)
+		keys[i], vals[i] = createBenchData(b.N)
 	}
 
-	b.StopTimer()
+	b.SetParallelism(benchmarkParalellism)
+
+	b.ResetTimer()
+	b.RunParallel(func(pb *testing.PB) {
+		localMutex.Lock()
+		s := connections[0]
+		localKeys, localVals := keys[len(connections)-1], vals[len(connections)-1]
+		connections = connections[1:]
+		localMutex.Unlock()
+
+		for pb.Next() {
+			s.Store(localKeys[0], localVals[0])
+			localKeys, localVals = localKeys[1:], localVals[1:]
+		}
+	})
 }
