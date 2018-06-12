@@ -16,7 +16,7 @@ func NewStorageFiles(dir string) StorageFiles {
 }
 
 func (s StorageFiles) Store(key, value []byte) error {
-	fileName := filepath.Join(s.Dir, string(key)+".txt")
+	fileName := filepath.Join(s.Dir, string(makeUrl(nil, key))+".txt")
 	f, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY|os.O_TRUNC|os.O_EXCL, DEFAULT_FILE_MODE)
 	if err != nil {
 		if os.IsExist(err) {
@@ -34,8 +34,8 @@ func (s StorageFiles) Store(key, value []byte) error {
 }
 
 func (s StorageFiles) Get(key []byte) (res []byte, err error) {
-	filePath := filepath.Join(s.Dir, string(key)+".txt")
-	res, err = ioutil.ReadFile(filePath)
+	fileName := filepath.Join(s.Dir, string(makeUrl(nil, key))+".txt")
+	res, err = ioutil.ReadFile(fileName)
 	if os.IsNotExist(err) {
 		err = errNoKey
 	}

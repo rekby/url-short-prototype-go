@@ -1,10 +1,10 @@
 package main
 
 import (
-	"testing"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"testing"
 )
 
 var (
@@ -23,8 +23,8 @@ func TestStorageFiles_Store(t *testing.T) {
 		t.Error(err)
 	}
 
-	val, err := ioutil.ReadFile(filepath.Join(tmpDir, "123.txt"))
-	if err != nil  || string(val) != "222"{
+	val, err := ioutil.ReadFile(filepath.Join(tmpDir, string(makeUrl(nil, []byte("123")))+".txt"))
+	if err != nil || string(val) != "222" {
 		t.Error(err, string(val))
 	}
 }
@@ -38,7 +38,7 @@ func TestStorageFiles_StoreDuplicate(t *testing.T) {
 	s := NewStorageFiles(tmpDir)
 	s.Store([]byte("123"), []byte("222"))
 	err = s.Store([]byte("123"), []byte("asdasd"))
-	if err != errDuplicate{
+	if err != errDuplicate {
 		t.Error(err)
 	}
 }
@@ -50,7 +50,7 @@ func TestStorageFiles_Get(t *testing.T) {
 	}
 	defer os.RemoveAll(tmpDir)
 	s := NewStorageFiles(tmpDir)
-	ioutil.WriteFile(filepath.Join(tmpDir, "222.txt"), []byte("234"), DEFAULT_FILE_MODE)
+	ioutil.WriteFile(filepath.Join(tmpDir, string(makeUrl(nil, []byte("222")))+".txt"), []byte("234"), DEFAULT_FILE_MODE)
 	value, err := s.Get([]byte("222"))
 	if string(value) != "234" || err != nil {
 		t.Error(err, value)
@@ -69,4 +69,3 @@ func TestStorageFiles_GetNoKey(t *testing.T) {
 		t.Error(err, value)
 	}
 }
-
