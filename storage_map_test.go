@@ -4,6 +4,10 @@ import (
 	"testing"
 )
 
+var (
+	_ Storage = NewStorageMap()
+)
+
 func TestStorageMap_Store(t *testing.T) {
 	s := NewStorageMap()
 	err := s.Store([]byte("123"), []byte("222"))
@@ -12,7 +16,7 @@ func TestStorageMap_Store(t *testing.T) {
 	}
 
 	val, exist := s.m["123"]
-	if !exist  || string(val) != "222"{
+	if !exist || string(val) != "222" {
 		t.Error(exist, string(val))
 	}
 }
@@ -31,7 +35,7 @@ func TestStorageMap_Get(t *testing.T) {
 	s.m["123"] = []byte("222")
 
 	val, err := s.Get([]byte("123"))
-	if err != nil || string(val) != "222"{
+	if err != nil || string(val) != "222" {
 		t.Error(err, val)
 	}
 }
@@ -43,5 +47,3 @@ func TestStorageMap_GetNoKey(t *testing.T) {
 		t.Error(err, val)
 	}
 }
-
-

@@ -1,12 +1,10 @@
 package main
 
-import (
-	"testing"
-)
+import "testing"
 
-func BenchmarkStorageMap_Store(b *testing.B) {
+func BenchmarkStorageTarantool_Store(b *testing.B) {
 	keys, vals := createBenchData(b.N)
-	s := NewStorageMap()
+	s := tarantoolTestInit()
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
