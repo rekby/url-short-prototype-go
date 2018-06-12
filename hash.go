@@ -9,6 +9,11 @@ func hashSha256(value []byte)[]byte{
 	return hash[:]
 }
 
+func hashSha256_48Bit(value []byte)[]byte{
+	hash := sha256.Sum256(value)
+	return hash[:6]
+}
+
 func hashSha256_64Bit(value []byte)[]byte{
 	hash := sha256.Sum256(value)
 	return hash[:8]
