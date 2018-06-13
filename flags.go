@@ -9,4 +9,15 @@ var (
 	urlPrefixBytes        []byte
 	maxRetryCount         = flag.Int("max-retry-save", 100, "Max count for save hash on any error")
 	addRandomBytesOnRetry = flag.Int("add-random-bytes", 8, "Add random bytes to url for generate new id")
+
+	storageType = flag.String("storage-type", "files", "files|memory-map|redis|tarantool")
+
+	redisAddress  = flag.String("redis-addr", "127.0.0.1:6379", "redis addr")
+	redisDatabase = flag.Int("redis-database", 0, "")
+
+	tarantoolServer   = flag.String("tarantool-server", "127.0.0.1:3301", "")
+	tarantoolUser     = flag.String("tarantool-user", "admin", "")
+	tarantoolPassword = flag.String("tarantool-password", "", "")
+	tarantoolSpace    = flag.String("tarantool-space", "url-short",
+		"Space have to be existed. In space have to be existed primary index for first field, type scalar.")
 )

@@ -5,6 +5,10 @@ import dchest "github.com/dchest/siphash"
 import (
 	"crypto/md5"
 
+	cryptorand "crypto/rand"
+
+	"math/rand"
+
 	aead "github.com/aead/siphash"
 )
 
@@ -65,4 +69,16 @@ func aeadSipHash_48bit(value []byte) []byte {
 	hash.Write(value)
 	res := hash.Sum(nil)
 	return res[:6]
+}
+
+func hashCryptoRandom_48Bit([]byte) []byte {
+	res := make([]byte, 6)
+	cryptorand.Read(res)
+	return res
+}
+
+func hashRandom_48Bit([]byte) []byte {
+	res := make([]byte, 6)
+	rand.Read(res)
+	return res
 }

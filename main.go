@@ -2,16 +2,17 @@ package main
 
 import (
 	"bytes"
+	cryptorand "crypto/rand"
 	"flag"
-
+	"math/rand"
 	"net/http"
-
 	"net/url"
 
-	"math/rand"
-	"time"
-
 	"github.com/valyala/fasthttp"
+
+	"log"
+	"math"
+	"math/big"
 )
 
 const (
@@ -21,7 +22,7 @@ const (
 
 var (
 	storage         Storage     = nil
-	hashFunc        HashFunc    = dchestSipHash_48bitFast
+	hashFunc        HashFunc    = hashRandom_48Bit
 	makeUrl         MakeUrlFunc = encodeUrlBase64
 	hashDecoderFunc IdDecoder   = decodeUrlBase64
 )
@@ -29,9 +30,24 @@ var (
 func main() {
 	flag.Parse()
 	urlPrefixBytes = []byte(*urlPrefix)
-	rand.Seed(time.Now().UnixNano())
+	randIntSeed, err := cryptorand.Int(cryptorand.Reader, big.NewInt(math.MaxInt64))
+	if err != nil {
+		panic(err)
+	}
+	rand.Seed(randIntSeed.Int64())
 
-	storage = NewStorageFiles(*storeFolder)
+	switch *storageType {
+	case "files":
+		storage = NewStorageFiles(*storeFolder)
+	case "memory-map":
+		storage = NewStorageMap()
+	case "tarantool":
+		storage = NewStorageTarantool(*tarantoolServer, *tarantoolUser, *tarantoolPassword, *tarantoolSpace)
+	case "redis":
+		storage = NewStorageRedis("tcp", *redisAddress, *redisDatabase)
+	default:
+		log.Fatalf("Unknown type of storage: '%v'", *storageType)
+	}
 
 	fasthttp.ListenAndServe(*bindAddress, handleRequest)
 }
