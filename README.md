@@ -83,3 +83,17 @@ Redis-драйвер
 -------------
 Выбрана реализация с наиболее простым и понятным интерфейсом из списка рекомендуемых на сайте Redis.
 
+Benchmark results
+=========
+
+    BenchmarkHashMD5_48Bit-4                 3000000               511 ns/op
+    BenchmarkHashSha256-4                    1000000              1663 ns/op
+    BenchmarkHashSipDchest_48bit-4           3000000               416 ns/op
+    BenchmarkHashSipDchestFast_48bit-4      10000000               206 ns/op
+    BenchmarkHashSipAeadSip_48bit-4          3000000               401 ns/op
+    BenchmarkHashRandom_48bit-4             20000000                91.0 ns/op
+    BenchmarkHashRandomCrypto_48Bit-4        2000000               913 ns/op
+    BenchmarkStorageFiles_Store-4             500000              3798 ns/op
+    BenchmarkStorageMap_Store-4              3000000               776 ns/op
+    BenchmarkStorageRedis_Store-4             100000             16296 ns/op
+    BenchmarkStorageTarantool_Store-4         100000             18326 ns/op
