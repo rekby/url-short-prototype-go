@@ -42,7 +42,9 @@ func main() {
 	case "memory-map":
 		storage = NewStorageMap()
 	case "tarantool":
-		storage = NewStorageTarantool(*tarantoolServer, *tarantoolUser, *tarantoolPassword, *tarantoolSpace)
+		t := NewStorageTarantool(*tarantoolServer, *tarantoolUser, *tarantoolPassword, *tarantoolSpace)
+		defer t.Close()
+		storage = t
 	case "redis":
 		storage = NewStorageRedis("tcp", *redisAddress, *redisDatabase)
 	default:

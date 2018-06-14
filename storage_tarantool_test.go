@@ -52,6 +52,7 @@ func TestStorageTarantool_Store(t *testing.T) {
 	}()
 
 	s := tarantoolTestInit()
+	defer s.Close()
 	err := s.Store([]byte("123"), []byte("234"))
 	if err != nil {
 		t.Error(err)
@@ -73,6 +74,7 @@ func TestStorageTarantool_StoreDuplicate(t *testing.T) {
 	}()
 
 	s := tarantoolTestInit()
+	defer s.Close()
 	s.Store([]byte("123"), []byte("234"))
 	err := s.Store([]byte("123"), []byte("234"))
 	if err != errDuplicate {
@@ -95,6 +97,7 @@ func TestStorageTarantool_Get(t *testing.T) {
 	}()
 
 	s := tarantoolTestInit()
+	defer s.Close()
 	s.conn.Insert(TEST_TARANTOOL_SPACE, []interface{}{"222", "123"})
 	val, err := s.Get([]byte("222"))
 	if err != nil || string(val) != "123" {
@@ -111,6 +114,7 @@ func TestStorageTarantool_GetNoKey(t *testing.T) {
 	}()
 
 	s := tarantoolTestInit()
+	defer s.Close()
 	val, err := s.Get([]byte("222"))
 	if err != errNoKey {
 		t.Error(err, string(val))

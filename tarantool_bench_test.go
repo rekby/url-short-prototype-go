@@ -26,6 +26,12 @@ func BenchmarkStorageTarantool_Store(b *testing.B) {
 		keys[i], vals[i] = createBenchData(b.N)
 	}
 
+	defer func() {
+		for _, c := range connections {
+			c.Close()
+		}
+	}()
+
 	b.SetParallelism(benchmarkParalellism)
 
 	b.ResetTimer()
