@@ -107,13 +107,7 @@ func handlreStoreRequest(ctx *fasthttp.RequestCtx, urlBytes []byte) {
 			break
 		}
 
-		if tryIndex == 0 {
-			bytesForHash = make([]byte, len(urlBytes), len(urlBytes)+*maxRetryCount**addRandomBytesOnRetry)
-			copy(bytesForHash, urlBytes)
-		}
-		buf := make([]byte, *addRandomBytesOnRetry)
-		rand.Read(buf)
-		bytesForHash = append(bytesForHash, buf...)
+		bytesForHash = urlHash
 	}
 	if saveErr != nil {
 		ctx.SetStatusCode(http.StatusInternalServerError)
