@@ -3,6 +3,7 @@ package main
 import "crypto/sha256"
 import dchest "github.com/dchest/siphash"
 import (
+	//nolint:gas
 	"crypto/md5"
 
 	cryptorand "crypto/rand"
@@ -15,6 +16,7 @@ import (
 type HashFunc func(value []byte) []byte
 
 func hashMD5_48Bit(value []byte) []byte {
+	//nolint:gas
 	hash := md5.Sum(value)
 	return hash[:6]
 }
@@ -24,11 +26,13 @@ func hashSha256(value []byte) []byte {
 	return hash[:]
 }
 
+//nolint:deadcode,megacheck
 func hashSha256_48Bit(value []byte) []byte {
 	hash := sha256.Sum256(value)
 	return hash[:6]
 }
 
+//nolint:deadcode,megacheck
 func hashSha256_64Bit(value []byte) []byte {
 	hash := sha256.Sum256(value)
 	return hash[:8]
@@ -38,6 +42,7 @@ var sipHashKey = []byte{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
 
 func hashSipDchest_48bit(value []byte) []byte {
 	hash := dchest.New(sipHashKey)
+	//nolint:errcheck
 	hash.Write(value)
 	res := hash.Sum(nil)
 	return res[:6]
@@ -66,6 +71,7 @@ func hashSipDchestFast_48bit(value []byte) []byte {
 
 func hashSipAead_48bit(value []byte) []byte {
 	hash, _ := aead.New64(sipHashKey)
+	//nolint:errcheck
 	hash.Write(value)
 	res := hash.Sum(nil)
 	return res[:6]
@@ -73,12 +79,15 @@ func hashSipAead_48bit(value []byte) []byte {
 
 func hashRandomCrypto_48Bit([]byte) []byte {
 	res := make([]byte, 6)
-	cryptorand.Read(res)
+	if _, err := cryptorand.Read(res); err != nil {
+		panic(err)
+	}
 	return res
 }
 
 func hashRandom_48Bit([]byte) []byte {
 	res := make([]byte, 6)
+	//nolint:errcheck,gas
 	rand.Read(res)
 	return res
 }

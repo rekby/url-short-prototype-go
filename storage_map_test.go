@@ -8,6 +8,7 @@ var (
 	_ Storage = NewStorageMap()
 )
 
+//nolint:deadcode,megacheck
 func TestStorageMap_Store(t *testing.T) {
 	s := NewStorageMap()
 	err := s.Store([]byte("123"), []byte("222"))
@@ -21,15 +22,17 @@ func TestStorageMap_Store(t *testing.T) {
 	}
 }
 
+//nolint:deadcode,megacheck,errcheck
 func TestStorageMap_StoreDuplicate(t *testing.T) {
 	s := NewStorageMap()
+	s.Store([]byte("123"), []byte("222"))
 	err := s.Store([]byte("123"), []byte("222"))
-	err = s.Store([]byte("123"), []byte("222"))
 	if err != errDuplicate {
 		t.Error(err)
 	}
 }
 
+//nolint:deadcode,megacheck
 func TestStorageMap_Get(t *testing.T) {
 	s := NewStorageMap()
 	s.m["123"] = []byte("222")
@@ -40,6 +43,7 @@ func TestStorageMap_Get(t *testing.T) {
 	}
 }
 
+//nolint:deadcode,megacheck
 func TestStorageMap_GetNoKey(t *testing.T) {
 	s := NewStorageMap()
 	val, err := s.Get([]byte("123"))

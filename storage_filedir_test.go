@@ -11,6 +11,7 @@ var (
 	_ Storage = StorageFiles{}
 )
 
+//nolint:deadcode,megacheck,errcheck
 func TestStorageFiles_Store(t *testing.T) {
 	tmpDir, err := ioutil.TempDir("", "url-short")
 	if err != nil {
@@ -29,6 +30,7 @@ func TestStorageFiles_Store(t *testing.T) {
 	}
 }
 
+//nolint:deadcode,megacheck,errcheck
 func TestStorageFiles_StoreDuplicate(t *testing.T) {
 	tmpDir, err := ioutil.TempDir("", "url-short")
 	if err != nil {
@@ -43,6 +45,7 @@ func TestStorageFiles_StoreDuplicate(t *testing.T) {
 	}
 }
 
+//nolint:deadcode,megacheck,errcheck
 func TestStorageFiles_Get(t *testing.T) {
 	tmpDir, err := ioutil.TempDir("", "url-short")
 	if err != nil {
@@ -57,6 +60,7 @@ func TestStorageFiles_Get(t *testing.T) {
 	}
 }
 
+//nolint:deadcode,megacheck,errcheck
 func TestStorageFiles_GetNoKey(t *testing.T) {
 	tmpDir, err := ioutil.TempDir("", "url-short")
 	if err != nil {

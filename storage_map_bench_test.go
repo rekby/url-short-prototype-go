@@ -6,6 +6,7 @@ import (
 	"testing"
 )
 
+//nolint:deadcode,megacheck
 func BenchmarkStorageMap_Store(b *testing.B) {
 	var goroutinesCount = benchmarkParalellism * runtime.GOMAXPROCS(-1)
 	connections := make([]*StorageMap, goroutinesCount)
@@ -29,7 +30,9 @@ func BenchmarkStorageMap_Store(b *testing.B) {
 		localMutex.Unlock()
 
 		for pb.Next() {
-			s.Store(localKeys[0], localVals[0])
+			if err := s.Store(localKeys[0], localVals[0]); err != nil {
+				b.Error(err)
+			}
 			localKeys, localVals = localKeys[1:], localVals[1:]
 		}
 	})

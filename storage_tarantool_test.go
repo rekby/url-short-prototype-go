@@ -13,6 +13,7 @@ const (
 	TEST_TARANTOOL_SPACE    = "test"
 )
 
+//nolint:deadcode,megacheck,errcheck
 func tarantoolTestInit() *StorageTarantool {
 	s := NewStorageTarantool(TEST_TARANTOOL_SERVER, TEST_TARANTOOL_USER, TEST_TARANTOOL_PASSWORD, TEST_TARANTOOL_SPACE)
 	if space, exist := s.conn.Schema.Spaces[TEST_TARANTOOL_SPACE]; exist {
@@ -43,6 +44,7 @@ func tarantoolTestInit() *StorageTarantool {
 	return s
 }
 
+//nolint:deadcode,megacheck
 func TestStorageTarantool_Store(t *testing.T) {
 	defer func() {
 		err := recover()
@@ -65,6 +67,7 @@ func TestStorageTarantool_Store(t *testing.T) {
 	}
 }
 
+//nolint:deadcode,megacheck,errcheck
 func TestStorageTarantool_StoreDuplicate(t *testing.T) {
 	defer func() {
 		err := recover()
@@ -88,6 +91,7 @@ func TestStorageTarantool_StoreDuplicate(t *testing.T) {
 	}
 }
 
+//nolint:deadcode,megacheck,errcheck
 func TestStorageTarantool_Get(t *testing.T) {
 	defer func() {
 		err := recover()
@@ -105,6 +109,7 @@ func TestStorageTarantool_Get(t *testing.T) {
 	}
 }
 
+//nolint:deadcode,megacheck,errcheck
 func TestStorageTarantool_GetNoKey(t *testing.T) {
 	defer func() {
 		err := recover()

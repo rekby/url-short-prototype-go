@@ -25,6 +25,7 @@ func createBenchData(count int) (items, values [][]byte) {
 	return keys, vals
 }
 
+//nolint:deadcode,megacheck,errcheck
 func BenchmarkStorageFiles_Store(b *testing.B) {
 	tmpDir, err := ioutil.TempDir("", "benchmark-files")
 	if err != nil {

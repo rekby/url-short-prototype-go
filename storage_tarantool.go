@@ -12,6 +12,7 @@ type StorageTarantool struct {
 }
 
 type tarantoolTuple struct {
+	//nolint:structcheck,megacheck
 	_msgpack struct{} `msgpack:",asArray"`
 	ID       string
 	Value    []byte

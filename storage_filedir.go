@@ -11,7 +11,9 @@ type StorageFiles struct {
 }
 
 func NewStorageFiles(dir string) StorageFiles {
-	os.MkdirAll(dir, DEFAULT_DIR_MODE)
+	if err := os.MkdirAll(dir, DEFAULT_DIR_MODE); err != nil {
+		panic(err)
+	}
 	return StorageFiles{Dir: dir}
 }
 

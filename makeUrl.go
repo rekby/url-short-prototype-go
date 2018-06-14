@@ -9,8 +9,10 @@ import (
 type MakeUrlFunc func(prefix, id []byte) (url []byte)
 type IdDecoder func(urlHash []byte) ([]byte, error)
 
+//nolint:deadcode,megacheck
 var base32Encoding = base32.NewEncoding("ABCDEFGHJKLMNPQRSTUVWXYZ-2345679").WithPadding(base32.NoPadding)
 
+//nolint:deadcode,megacheck
 func encodeUrlBase32(prefix, val []byte) []byte {
 	resLen := base32Encoding.EncodedLen(len(val))
 	res := make([]byte, resLen+len(prefix))
@@ -37,6 +39,7 @@ func decodeUrlBase64(val []byte) ([]byte, error) {
 	return res[:realLen], nil
 }
 
+//nolint:deadcode,megacheck
 func encodeUrlBase62(prefix, val []byte) []byte {
 	bigInt := big.Int{}
 	bigInt.SetBytes(val)

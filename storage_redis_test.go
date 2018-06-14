@@ -16,6 +16,7 @@ type TestSkip interface {
 	Skip(args ...interface{})
 }
 
+//nolint:deadcode,megacheck
 func redisInit(t TestSkip) *StorageRedis {
 	testDb, err := strconv.Atoi(os.Getenv("REKBY_REDIS_TEST_DB"))
 	if err != nil {
@@ -34,6 +35,7 @@ WARNING: The database will be flushed (REMOVE ALL DATA).
 	return s
 }
 
+//nolint:deadcode,megacheck
 func TestStorageRedis_Store(t *testing.T) {
 	s := redisInit(t)
 	err := s.Store([]byte("123"), []byte("234"))
@@ -48,8 +50,10 @@ func TestStorageRedis_Store(t *testing.T) {
 	}
 }
 
+//nolint:deadcode,megacheck
 func TestStorageRedis_StoreDuplicate(t *testing.T) {
 	s := redisInit(t)
+	//nolint:errcheck
 	s.Store([]byte("123"), []byte("234"))
 	err := s.Store([]byte("123"), []byte("234"))
 	if err != errDuplicate {
@@ -63,6 +67,7 @@ func TestStorageRedis_StoreDuplicate(t *testing.T) {
 	}
 }
 
+//nolint:deadcode,megacheck
 func TestStorageRedis_Get(t *testing.T) {
 	s := redisInit(t)
 	s.redisPool.Cmd("SET", "234", "567")
@@ -72,6 +77,7 @@ func TestStorageRedis_Get(t *testing.T) {
 	}
 }
 
+//nolint:deadcode,megacheck
 func TestStorageRedis_GetNoKey(t *testing.T) {
 	s := redisInit(t)
 	val, err := s.Get([]byte("234"))

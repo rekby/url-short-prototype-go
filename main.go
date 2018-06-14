@@ -51,7 +51,9 @@ func main() {
 		log.Fatalf("Unknown type of storage: '%v'", *storageType)
 	}
 
-	fasthttp.ListenAndServe(*bindAddress, handleRequest)
+	if err := fasthttp.ListenAndServe(*bindAddress, handleRequest); err != nil {
+		log.Println(err)
+	}
 }
 
 func handleRequest(ctx *fasthttp.RequestCtx) {
@@ -76,17 +78,25 @@ func handleReadRequest(ctx *fasthttp.RequestCtx) {
 	binaryId, err := hashDecoderFunc(encodedId)
 	if err != nil {
 		ctx.SetStatusCode(http.StatusBadRequest)
-		ctx.WriteString(err.Error())
+		if _, err := ctx.WriteString(err.Error()); err != nil {
+			ctx.SetStatusCode(http.StatusInternalServerError)
+		}
 		return
 	}
 
 	destUrl, err := storage.Get(binaryId)
 	if err != nil {
 		ctx.SetStatusCode(http.StatusInternalServerError)
-		ctx.WriteString(err.Error())
+		if _, err := ctx.WriteString(err.Error()); err != nil {
+			ctx.SetStatusCode(http.StatusInternalServerError)
+			return
+		}
 	}
 	ctx.SetStatusCode(http.StatusOK)
-	ctx.Write(destUrl)
+	if _, err := ctx.Write(destUrl); err != nil {
+		ctx.SetStatusCode(http.StatusInternalServerError)
+		return
+	}
 }
 
 func handlreStoreRequest(ctx *fasthttp.RequestCtx, urlBytes []byte) {
@@ -111,12 +121,18 @@ func handlreStoreRequest(ctx *fasthttp.RequestCtx, urlBytes []byte) {
 	}
 	if saveErr != nil {
 		ctx.SetStatusCode(http.StatusInternalServerError)
-		ctx.WriteString(saveErr.Error())
+		if _, err := ctx.WriteString(saveErr.Error()); err != nil {
+			ctx.SetStatusCode(http.StatusInternalServerError)
+			return
+		}
 		return
 	}
 	ctx.Response.SetStatusCode(http.StatusOK)
 	ctx.SetContentType("text/plain")
-	ctx.Write(resultUrl)
+	if _, err := ctx.Write(resultUrl); err != nil {
+		ctx.SetStatusCode(http.StatusInternalServerError)
+		return
+	}
 }
 
 var checkUrlAllowedPrefixes = [][]byte{

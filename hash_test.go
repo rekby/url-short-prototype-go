@@ -5,6 +5,7 @@ import (
 	"testing"
 )
 
+//nolint:deadcode,megacheck
 func TestSipHashes(t *testing.T) {
 	const cnt = 10000
 	_, values := createBenchData(cnt)
