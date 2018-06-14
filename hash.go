@@ -36,24 +36,24 @@ func hashSha256_64Bit(value []byte) []byte {
 
 var sipHashKey = []byte{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
 
-func dchestSipHash_48bit(value []byte) []byte {
+func hashSipDchest_48bit(value []byte) []byte {
 	hash := dchest.New(sipHashKey)
 	hash.Write(value)
 	res := hash.Sum(nil)
 	return res[:6]
 }
 
-var sipHashKeyUint0 = uint64(sipHashKey[0]) | uint64(sipHashKey[1])<<8 |
+var hashSipKeyUint0 = uint64(sipHashKey[0]) | uint64(sipHashKey[1])<<8 |
 	uint64(sipHashKey[2])<<16 | uint64(sipHashKey[3])<<24 |
 	uint64(sipHashKey[4])<<32 | uint64(sipHashKey[5])<<40 | uint64(sipHashKey[6])<<48 |
 	uint64(sipHashKey[7])<<56
-var sipHashKeyUint1 = uint64(sipHashKey[8]) | uint64(sipHashKey[9])<<8 |
+var hashSipKeyUint1 = uint64(sipHashKey[8]) | uint64(sipHashKey[9])<<8 |
 	uint64(sipHashKey[10])<<16 | uint64(sipHashKey[11])<<24 |
 	uint64(sipHashKey[12])<<32 | uint64(sipHashKey[13])<<40 | uint64(sipHashKey[14])<<48 |
 	uint64(sipHashKey[15])<<56
 
-func dchestSipHash_48bitFast(value []byte) []byte {
-	resUint := dchest.Hash(sipHashKeyUint0, sipHashKeyUint1, value)
+func hashSipDchestFast_48bit(value []byte) []byte {
+	resUint := dchest.Hash(hashSipKeyUint0, hashSipKeyUint1, value)
 	res := make([]byte, 6)
 	res[0] = byte(resUint)
 	res[1] = byte(resUint >> 8)
@@ -64,14 +64,14 @@ func dchestSipHash_48bitFast(value []byte) []byte {
 	return res
 }
 
-func aeadSipHash_48bit(value []byte) []byte {
+func hashSipAead_48bit(value []byte) []byte {
 	hash, _ := aead.New64(sipHashKey)
 	hash.Write(value)
 	res := hash.Sum(nil)
 	return res[:6]
 }
 
-func hashCryptoRandom_48Bit([]byte) []byte {
+func hashRandomCrypto_48Bit([]byte) []byte {
 	res := make([]byte, 6)
 	cryptorand.Read(res)
 	return res
